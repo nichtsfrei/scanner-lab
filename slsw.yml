@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slsw
+  labels:
+    app: slsw
+spec:
+  replicas: 100
+  selector:
+    matchLabels:
+      app: slsw
+  template:
+    metadata:
+      labels:
+        app: slsw
+    spec:
+      containers:
+      - name: slsw-container
+        image: ghcr.io/greenbone/scanner-lab-simulate-website
+        imagePullPolicy: Always
