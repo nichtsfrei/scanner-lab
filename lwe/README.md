@@ -1,8 +1,10 @@
-# LWE
+# scanner-lab-simulate-website 
 
-LWE (large-website-emulator) will create a single html page in a given MB size.
+scanner-lab-simulate-website is a image to create single html with given MB size.
 
-When no MB size is given it will randomly choose a size between 1 and 256.
+The main purpose of this image is to be used within scanner-lab to test memory caching behaviour and may produce out of memory issues.
+
+When no size is given it will randomly choose a size between 1 and 256.
 
 ## Environment Parameter
 
