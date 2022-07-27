@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openvas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openvas
+  template:
+    metadata:
+      name: openvas
+      labels:
+        app: openvas
+    spec:
+      volumes:
+      - name: redis-socket
+        emptyDir: {}
+      - name: nasl-plugins
+        emptyDir: {}
+      - name: notus-data
+        emptyDir: {}
+      - name: openvas-config
+        emptyDir: {}
+      initContainers:
+      - name: nasl
+        image: ghcr.io/greenbone/vulnerability-tests:community-main
+        imagePullPolicy: Always
+        volumeMounts:
+          - name: nasl-plugins
+            mountPath: /mnt/nasl
+        command: ['sh', '-c']
+        args: ['cp -rv /var/lib/openvas/22.04/vt-data/nasl/* /mnt/nasl/']
+      - name: notus-advisories
+        image: ghcr.io/greenbone/notus-data:community
+        imagePullPolicy: Always
+        volumeMounts:
+          - name: notus-data
+            mountPath: /mnt/notus
+        command: ['cp', '-rv', '/var/lib/openvas/plugins/notus/advisories', '/mnt/notus/']
+      - name: notus-products
+        image: ghcr.io/greenbone/notus-data:community
+        imagePullPolicy: Always
+        volumeMounts:
+          - name: notus-data
+            mountPath: /mnt/notus
+        command: ['cp', '-rv', '/var/lib/openvas/plugins/notus/products', '/mnt/notus/']
+      - name: mqtt-broker-openvas-fix
+        image: greenbone/ospd-openvas:unstable
+        imagePullPolicy: Always
+        volumeMounts:
+          - name: openvas-config
+            mountPath: /mnt/ovc
+        command: ['sh', '-c']
+        args: ["sed 's/mqtt-broker/localhost/' /etc/openvas/openvas.conf > /mnt/ovc/openvas.conf; cp /etc/openvas/openvas_log.conf /mnt/ovc/"]
+      containers:
+      - name: broker
+        image: greenbone/mqtt-broker
+        imagePullPolicy: Always
+      - name: notus
+        image: greenbone/notus-scanner:unstable
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: notus-data
+          mountPath: /var/lib/notus
+        command: ["notus-scanner", "-f", "--disable-hashsum-verification=True"]
+      - name: redis
+        image: greenbone/redis-server
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: redis-socket
+          mountPath: /run/redis
+      - name: ospd
+        image: greenbone/ospd-openvas:unstable
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: redis-socket
+          mountPath: /run/redis
+        - name: nasl-plugins
+          mountPath: /var/lib/openvas/plugins
+        - name: notus-data
+          mountPath: /var/lib/notus
+        - name: openvas-config
+          mountPath: /etc/openvas
+        securityContext:
+          capabilities:
+            add:
+              - NET_ADMIN
+              - NET_RAW
