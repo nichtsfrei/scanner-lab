@@ -32,11 +32,18 @@ Additionally it should create
 - `/etc/systemd/system/k3s.service`
 and enabling it per default.
 
-To allow user execution create a group and open up `k3s.yaml` a bit:
+To allow user execution set a `KUBECONFIG` variable:
+
+
 ```
-sudo groupadd k3s
-sudo usermod -a -G k3s $USER
-sudo chown root:k3s /etc/rancher/k3s/k3s.yaml
+export KUBECONFIG=~/.kube/config
+```
+
+if you already have running pods you can copy the configuration like:
+
+```
+mkdir -p ~/.kube
+sudo k3s kubectl config view --raw > "$KUBECONFIG"
 ```
 
 Further resources:
@@ -48,6 +55,27 @@ Further resources:
 ```
 kubectl apply -f openvas.yaml
 kubectl apply -f victim.yaml
+kubectl apply -f slsw.yaml
 ```
 
+### Remove deployments
 
+```
+kubectl delete deployments/openvas
+kubectl delete deployments/victim
+kubectl delete deployments/slsw
+```
+
+### Update
+
+```
+kubectl rollout restart -f openvas.yaml
+kubectl rollout restart -f victim.yaml
+kubectl rollout restart -f slsw.yaml
+```
+
+### Scale
+```
+kubectl scale deployments/victim --replicas=100
+kubectl scale deployments/slsw --replicas=100
+```
