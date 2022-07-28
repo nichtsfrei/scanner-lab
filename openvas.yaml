@@ -22,7 +22,20 @@ spec:
         emptyDir: {}
       - name: openvas-config
         emptyDir: {}
+      - name: scan-config 
+        emptyDir: {}
       initContainers:
+      - name: scan-config
+        image: ghcr.io/greenbone/data-objects:community-main
+        imagePullPolicy: Always
+        env:
+          - name: POLICY_ROOT
+            value: "find /var/lib/gvm/data-objects/gvmd/*/*configs -type d"
+        volumeMounts:
+          - name: scan-config
+            mountPath: /mnt
+        command: ['sh', '-c']
+        args: ['install -D -v -m 777 $($POLICY_ROOT | sort -r | head -n 1)/* -t /mnt']
       - name: nasl
         image: ghcr.io/greenbone/vulnerability-tests:community-main
         imagePullPolicy: Always
@@ -82,6 +95,8 @@ spec:
           mountPath: /var/lib/notus
         - name: openvas-config
           mountPath: /etc/openvas
+        - name: scan-config 
+          mountPath: /usr/local/src/policies
         securityContext:
           capabilities:
             add:

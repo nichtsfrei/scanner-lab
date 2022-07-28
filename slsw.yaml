@@ -5,7 +5,7 @@ metadata:
   labels:
     app: slsw
 spec:
-  replicas: 100
+  replicas: 1
   selector:
     matchLabels:
       app: slsw

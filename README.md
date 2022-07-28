@@ -79,3 +79,17 @@ kubectl rollout restart -f slsw.yaml
 kubectl scale deployments/victim --replicas=100
 kubectl scale deployments/slsw --replicas=100
 ```
+
+## Useful commands
+
+### start a scan
+
+```
+kubectl exec -ti deployment/openvas -c ospd -- bash
+OSPD_SOCKET=/run/ospd/ospd-openvas.sock ospd-scans -host 10.42.0.0/24 -policies "Discovery,Full and fast" -cmd start-finish
+```
+
+### openvas logs
+```
+kubectl exec -ti deployment/openvas -c ospd -- tail -f /var/log/gvm/openvas.log 
+```
