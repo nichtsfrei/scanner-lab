@@ -20,6 +20,8 @@ else
 	pvd := ${PVD_LOCAL}
 endif
 
+all: deploy
+
 create-local-volume-deployment:
 	sed 's|${NASL_TARGET_DEFAULT}|${nasl_target}|' ${PVD} > ${PVD_LOCAL}
 	sed -i 's|${NOTUS_TARGET_DEFAULT}|${notus_target}|' ${PVD_LOCAL}
@@ -55,7 +57,10 @@ deploy-victim:
 deploy-slsw:
 	kubectl apply -f slsw-deployment.yaml
 
-deploy: deploy-openvas deploy-victim deploy-slsw
+deploy-slackware:
+	kubectl apply -f slackware-deployment.yaml
+
+deploy: deploy-openvas deploy-victim deploy-slackware deploy-slsw
 
 delete-openvas:
 	kubectl delete deployment/openvas
@@ -69,7 +74,10 @@ delete-victim:
 delete-slsw:
 	kubectl delete deployment/slsw
 
-delete: delete-persistent-volumes delete-victim delete-slsw
+delete-slackware:
+	kubectl delete deployment/slackware
+
+delete: delete-persistent-volumes delete-victim delete-slackware delete-slsw
 
 update-openvas:
 	kubectl rollout restart deployment/openvas
@@ -80,4 +88,7 @@ update-victim:
 update-slsw:
 	kubectl rollout restart deployment/slsw
 
-update: update-openvas update-victim update-slsw
+update-slackware:
+	kubectl rollout restart deployment/slackware
+
+update: update-openvas update-victim update-slackware update-slsw

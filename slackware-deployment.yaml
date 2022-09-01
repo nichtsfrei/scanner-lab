@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slackware
+  labels:
+    app: slackware
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: slackware
+  template:
+    metadata:
+      labels:
+        app: slackware
+    spec:
+      containers:
+      - name: slackware-container
+        image: ghcr.io/greenbone/scanner-lab-slackware
