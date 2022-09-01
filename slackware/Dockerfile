@@ -1,6 +1,6 @@
-ARG VERSION=13.0
+ARG VERSION=latest
 FROM vbatts/slackware:${VERSION}
-ARG VERSION=13.0
+ARG VERSION=latest
 RUN slackpkg update \
   && slackpkg -batch=on -default_answer=y install \
     openssh \
