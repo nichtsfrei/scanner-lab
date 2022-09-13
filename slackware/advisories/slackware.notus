@@ -5,8 +5,8 @@
         {
             "oid": "0.0.0.0.0.0.0.0.0.0.0.1.01",
             "title": "Slackware: Security Advisory (SSA:2003-141-01)",
-            "creation_date": TBS,
-            "last_modification": TBS,
+            "creation_date": 1663060235,
+            "last_modification": 1663060235,
             "advisory_id": "SSA:FAKE",
             "advisory_xref": "",
             "cves": [],
@@ -18,7 +18,7 @@
             "qod_type": "package",
             "severity": {
                 "origin": "Greenbone",
-                "date": TBS,
+                "date": 1663060235,
                 "cvss_v2": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
                 "cvss_v3": null
             }
