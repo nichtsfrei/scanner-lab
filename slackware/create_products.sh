@@ -10,7 +10,7 @@ printf '", "fixed_packages": ['
 for pkg in $LST; do
   printf '{ "name": null, "full_version": null, "full_name": "'
   printf "$pkg"
-  printf '", "specifier": ">="},'
+  printf '", "specifier": ">"},'
 done
 printf '{ "name": null, "full_version": null, "full_name": null, "specifier": ">="}'
 printf ']}]}\n'
