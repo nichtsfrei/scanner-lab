@@ -72,6 +72,12 @@ update-slackware:
 
 update: update-openvas update-victim update-slackware update-slsw
 
+prepare-release:
+	cd feature-tests && make build-cmds
+	mkdir -p release
+	cp feature-tests/bin/* release/
+	cp *-deployment.yaml release/
+
 build:
 	$(MAKE) -C slsw build
 	$(MAKE) -C slackware build

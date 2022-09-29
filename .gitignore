@@ -1,2 +1,4 @@
-
+release/
+changelog/
+.changelog.md
 *-local.yaml

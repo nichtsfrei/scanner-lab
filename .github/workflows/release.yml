@@ -1,0 +1,39 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build-and-release:
+    name: release
+    runs-on: 'ubuntu-latest'
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: 3.8
+    - name: Dependencies
+      run: |
+        apt-get update && apt-get --assume-yes install build-essential golang
+        python -m pip install --upgrade pontos
+    - name: Prepare
+      run: |
+        make prepare-release
+    - name: Changelog
+      id: prepare_changelog
+      run: |
+        pontos-changelog || (git log --oneline | grep "Add" | sed "s/.*Add[: ]*/* /" > .changelog.md)
+        [ ! -f ".changelog.md" ] && tail -n +7 changelog/*.md | head -n -2 | sed 's/##/#/' > .changelog.md
+        echo "::set-output name=RELEASE_BODY::$(cat .changelog.md)"
+    - name: Upload
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: release/*
+        tag: ${{ github.ref }}
+        overwrite: true
+        file_glob: true
+        body: |
+          ${{ steps.prepare_changelog.outputs.RELEASE_BODY }}
