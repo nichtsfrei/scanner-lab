@@ -15,7 +15,7 @@ notus_target := ${INSTALL_PREFIX}${NOTUS_TARGET_DEFAULT}
 SC_TARGET_DEFAULT := /var/lib/gvm/data-objects/gvmd/22.04/scan-configs
 sc_target := ${INSTALL_PREFIX}${SC_TARGET_DEFAULT}
 
-all: deploy
+all: deploy download-tests wait-for-openvas run-tests delete
 
 check-feed-dirs:
 	@ [ -d ${nasl_target} ] || (printf "\e[31m${nasl_target} missing\e[0m\n" && false)
@@ -72,15 +72,25 @@ update-slackware:
 
 update: update-openvas update-victim update-slackware update-slsw
 
+wait-for-openvas:
+	sh wait-for-openvas.sh
+
 prepare-release:
 	cd feature-tests && make build-cmds
 	mkdir -p release
 	cp feature-tests/bin/* release/
-	cp *-deployment.yaml release/
 
 build:
 	$(MAKE) -C slsw build
 	$(MAKE) -C slackware build
+
+download-tests:
+	rm -rf bin && mkdir bin
+	cd bin && curl -qH "Accept: application/vnd.github+json" https://api.github.com/repos/greenbone/scanner-lab/releases | jq -r ".[0] .assets[] .browser_download_url"| xargs -I {} curl -LOJ "{}"
+	chmod +x bin/run-feature-tests
+
+run-tests:
+	bin/run-feature-tests
 
 push:
 	$(MAKE) -C slsw push

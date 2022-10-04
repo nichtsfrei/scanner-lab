@@ -97,14 +97,14 @@ func main() {
 	}
 	pd := kubeutils.NewPodCP(*config, clientset, "ospd", ospd.ID)
 	if *certPath == "" {
-		if err := pd.FromPod("/var/lib/gvm/CA/cacert.pem", "/tmp/ca.pem "); err != nil {
+		if err := pd.FromPod("/var/lib/gvm/CA/cacert.pem", "/tmp/ca.pem"); err != nil {
 			panic(err.Error())
 		}
 		*certPath = "/tmp/ca.pem"
 
 	}
 	if *certKeyPath == "" {
-		if err := pd.FromPod("/var/lib/gvm/private/CA/serverkey.pem", "/tmp/key.pem "); err != nil {
+		if err := pd.FromPod("/var/lib/gvm/private/CA/serverkey.pem", "/tmp/key.pem"); err != nil {
 			panic(err.Error())
 		}
 		*certKeyPath = "/tmp/key.pem"
