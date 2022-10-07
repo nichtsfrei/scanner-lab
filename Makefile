@@ -42,7 +42,7 @@ deploy-slsw:
 deploy-slackware:
 	kubectl apply -f slackware-deployment.yaml
 
-deploy: deploy-openvas deploy-victim deploy-slackware deploy-slsw
+deploy: deploy-openvas deploy-victim deploy-slackware
 
 delete-openvas:
 	kubectl delete deployment/openvas
@@ -56,7 +56,7 @@ delete-slsw:
 delete-slackware:
 	kubectl delete deployment/slackware
 
-delete: delete-openvas delete-victim delete-slackware delete-slsw
+delete: delete-openvas delete-victim delete-slackware
 
 update-openvas:
 	kubectl rollout restart deployment/openvas
