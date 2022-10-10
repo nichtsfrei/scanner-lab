@@ -146,6 +146,11 @@ spec:
       - name: ospd
         image: greenbone/ospd-openvas:unstable
         imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: "8"
+          requests:
+            cpu: "0.9"
         ports:
           - containerPort: 4242
         volumeMounts:

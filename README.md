@@ -1,8 +1,37 @@
 # scanner-lab
 
-Is a repository to simplify testing openvas in a contained environment by using Kubernetes.
+`scanner-lab` is an framework to test `scanner` responsibilities within a closed environment to reproduce some issues.
 
-This is in an early stage and will be adapted over time.
+It is not using:
+- gvmd
+
+or any other scanner management besides ospd.
+
+This is done on purpose to reduce the amount of moving parts.
+
+This is done by providing a runtime environment based on Kubernetes. 
+
+Which spins up:
+- a notus-scanner instance
+- a ospd (and therefore openvas-scanner) instance configured to use TLS
+- a slackware instance with a running ssh daemon
+- a victim image based on metasploitable
+
+and then runs a test-binary called `run-feature-tests`.
+
+Currently it does:
+- Discovery and Full and Fast scan-config 
+
+on the targets:
+
+- slackware
+- victim
+
+To deploy and run `run-feature-tests` you can execute:
+
+```
+make
+```
 
 ## Installation
 
@@ -20,7 +49,7 @@ Requirements:
 - `/var/lib/notus/`
 - `/var/lib/gvm/data-objects/gvmd/22.04/scan-configs/`
 
-must exist and writeable by the user so that `make update-feed` can succeed.
+must exist and writeable by the user so that `make update-local-feed` can succeed.
 
 You can verify it by running `make check-feed-dirs`. If there is no output and no error code this is correctly setup.
 

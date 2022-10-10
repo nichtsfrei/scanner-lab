@@ -54,6 +54,9 @@ type ProgressHandler struct {
 
 func (r *ProgressHandler) Each(resp scan.GetScansResponse) {
 	fmt.Printf("\r%s: progress %d", r.name, resp.Scan.Progress)
+	// block the execution loop for a second to ease up
+	// CPU usage while running a test.
+	time.Sleep(1 * time.Second)
 }
 
 func (r *ProgressHandler) Last(resp scan.GetScansResponse) {
