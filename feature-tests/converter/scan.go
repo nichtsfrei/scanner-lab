@@ -36,10 +36,32 @@ func (tc *targetStartScanConverter) selection(pols []string, oids []string) []sc
 		selection.Single = append(selection.Single, ps.Single...)
 	}
 
+	// conflicting port-scannner
+	// when this is solved by the policy resolver remove this
+	exclude_oid := []string{
+		"1.3.6.1.4.1.25623.1.0.105924",
+		"1.3.6.1.4.1.25623.1.0.104000",
+		"1.3.6.1.4.1.25623.1.0.80009",
+		"1.3.6.1.4.1.25623.1.0.80001",
+		"1.3.6.1.4.1.25623.1.0.80002",
+		"1.3.6.1.4.1.25623.1.0.11219",
+		"1.3.6.1.4.1.25623.1.0.10335",
+		"1.3.6.1.4.1.25623.1.0.14274",
+		"1.3.6.1.4.1.25623.1.0.10796",
+		"1.3.6.1.4.1.25623.1.0.14663",
+	}
+
 	for _, oid := range oids {
+		for _, exclude := range exclude_oid {
+			if oid == exclude {
+				goto skip_me
+			}
+		}
+
 		selection.Single = append(selection.Single, scan.VTSingle{
 			ID: oid,
 		})
+	skip_me:
 	}
 
 	return []scan.VTSelection{selection}
