@@ -206,4 +206,9 @@ cd ./feature-tests
 make run
 ```
 
+## License
+
+Copyright (C) 2022-2023 [Greenbone Networks GmbH](https://www.greenbone.net/)
+
+Licensed under the [GNU Affero General Public License v3.0 or later](LICENSE).
 
